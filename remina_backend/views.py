@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 
 from .models import Item
+from .config import ITEM_FIELDS
 
 
 def _success(data=None):
@@ -19,11 +20,8 @@ def _error(errors, status=400):
 @csrf_exempt
 @require_http_methods(['POST'])
 def add_item(request):
-    name = request.GET.get('name', '')
-    topic = request.GET.get('topic', '')
-    link = request.GET.get('link', '')
-    rate = request.GET.get('rate', '')
-    item = Item(name=name, topic=topic, link=link, rate=rate)
+    item_fields = {field: request.GET.get(field, '') for field in ITEM_FIELDS}
+    item = Item(**item_fields)
     item.save()
 
     return _success({'item': item.to_dict()})
