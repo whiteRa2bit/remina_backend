@@ -27,3 +27,10 @@ def add_item(request):
     item.save()
 
     return _success({'item': item.to_dict()})
+
+
+@csrf_exempt
+@require_http_methods(['GET'])
+def get_items(request):
+    items = Item.objects.all()
+    return _success({'items': [item.to_dict() for item in items]})
