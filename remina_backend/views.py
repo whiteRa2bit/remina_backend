@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
+import json
 
 from .models import Item
 from .config import ITEM_FIELDS
@@ -20,7 +21,8 @@ def _error(errors, status=400):
 @csrf_exempt
 @require_http_methods(['POST'])
 def add_item(request):
-    item_fields = {field: request.GET.get(field, '') for field in ITEM_FIELDS}
+    params = json.loads(request.body.decode())
+    item_fields = {field: params.get(field, '') for field in ITEM_FIELDS}
     item = Item(**item_fields)
     item.save()
 
