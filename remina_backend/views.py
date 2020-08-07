@@ -29,7 +29,6 @@ def add_item(request):
     return _success({'item': item.to_dict()})
 
 
-@csrf_exempt
 @require_http_methods(['GET'])
 def get_items(request):
     items = Item.objects.all()
